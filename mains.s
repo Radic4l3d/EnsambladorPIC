@@ -78,14 +78,34 @@ debes darte prisa.*/
     
 
 ;prueba1
+
+    
+POEMA:
+.word 'B', 'I', 'N', ' ', 'I', 'N', ' ', 'T', 'Z', 'U', 'U', 'T', 'Z', ' ', 'A', ' ', 'C', 'H', 'I'
+.word 'B', 'I', 'N', ' ', 'I', 'N', ' ', 'T', 'Z', 'U', 'U', 'T', 'Z', ' ', 'A', ' ', 'C', 'H', 'I'
+.word 'T', 'U', 'T', ' ', 'Y', 'A', 'M', ' ', 'X', ' ', 'C', 'O', 'H', 'L'    
+.word 'X', ' ', 'C', 'I', 'I', 'C', 'H', 'P', 'A', 'M', ' ', 'Z', 'A', 'C'
+.word 'Y', ' ', 'A', 'N', ' ', 'Y', ' ', 'A', 'N', ' ', 'A', ' ', 'U', ' ', 'A', 'H', 'A', 'L'
+
+
+;prueba2 FUncional
+/*
 POEMA:
 .word 0xFC4A, 0xCC42, 0x3381, 0xCC42, 0x3381, 0xC042, 0xCC24, 0x3F00, 0x3F00, 0xC042, 0xCC24, 0xF318, 0xCF00, 0x3318, 0xCC42 
 .word 0xFC4A, 0xCC42, 0x3381, 0xCC42, 0x3381, 0xC042, 0xCC24, 0x3F00, 0x3F00, 0xC042, 0xCC24, 0xF318, 0xCF00, 0x3318, 0xCC42
 .word 0xC042, 0x3F00, 0xC042, 0x211A, 0xF318, 0x33A0, 0x00A5, 0xCF00, 0xFF00, 0x3318, 0x0F00
 .word 0x00A5, 0xCF00,0xCC42, 0xCC42, 0xCF00, 0x3318, 0xE318, 0xF318, 0x33A0,0xCC24,0xF318,0xCF00
 .word 0x211A, 0xF318, 0x3381, 0x211A, 0xF318, 0x3381, 0xF318, 0x3F00, 0xF318, 0x3318, 0xF318, 0x0F00, 0x0018
+*/
 
+;Abecedario Funcional
 
+    /*
+POEMA:
+.word 0xF318, 0xFC4A , 0xCF00, 0xFC42, 0xCF10, 0xC310, 0xDF08, 0x3318, 0xCC42
+.word 0x3E00, 0x0063, 0x0F00, 0x33A0, 0x3381, 0xFF00, 0xE318, 0xFF01, 0xE319
+.word 0xDD18, 0xC042, 0x3F00, 0x0324, 0x3305, 0x00A5, 0x211A, 0xCC24 
+*/
 
  
 ;........................................................................
@@ -154,14 +174,164 @@ Leer_Poema:
     MOV W0, TBLPAG
     MOV #tbloffset(POEMA), W1
 
+Ciclo_prin:
+    CLR W4			; Limpia W4 para recibir el dato
+    TBLRDL [W1++], W4		; Lee dato de la tabla en W4
+    CP W4, #0x0018		; compara
+    BRA Z, END_DELAY		; Si es ?, termina
+
+    CALL IMP_DISP		;PRUEBA Ro  COMPARADOR
+        
+    CALL Retardo		; Espera antes de mostrar el siguiente dato
+    BRA Ciclo_prin		; Repite para el siguiente dato
+ 
 Ciclo_Poema:
-    CLR W4                     ; Limpia W4 para recibir el dato
-    TBLRDL [W1++], W4  ; Lee dato de la tabla en W4
-    CP W4, #0x0018                ; compara
-    BRA Z, END_DELAY                 ; Si es
-    MOV W4, PORTB              ; Envía el dato al puerto para mostrarlo
-    CALL Retardo               ; Espera antes de mostrar el siguiente dato
-    BRA Ciclo_Poema            ; Repite para el siguiente dato
+    MOV W9, PORTB		; Envía el dato al puerto para mostrarlo
+    CALL Retardo		; Espera antes de mostrar el siguiente dato
+    CALL Ciclo_prin
+    
+IMP_DISP:
+    CLR W9
+    CLR W6
+    
+    MOV #32, W6	;ASCII ' '
+    MOV #0x0000, W9
+    CP W4, W6			; Compara dato de tabla con el ascii ' ' 
+    BRA Z, Ciclo_Poema
+ 
+    MOV #65, W6	;ASCII 'A'
+    MOV #0xF318, W9
+    CP W4, W6			; Compara dato de tabla con el ascii A
+    BRA Z, Ciclo_Poema
+    
+    MOV #66, W6	;ASCII 'B'
+    MOV #0xFC4A, W9
+    CP W4, W6			; Compara dato de tabla con el ascii B
+    BRA Z, Ciclo_Poema
+    
+    MOV #67, W6	;ASCII 'C'
+    MOV #0xCF00, W9
+    CP W4, W6			; Compara dato de tabla con el ascii C
+    BRA Z, Ciclo_Poema
+    
+    MOV #68, W6	;ASCII 'D'
+    MOV #0xFC42, W9
+    CP W4, W6			; Compara dato de tabla con el ascii A
+    BRA Z, Ciclo_Poema
+    
+    MOV #69, W6	;ASCII 'E'
+    MOV #0xCF10, W9
+    CP W4, W6			; Compara dato de tabla con el ascii A
+    BRA Z, Ciclo_Poema
+
+    MOV #70, W6	;ASCII 'F'
+    MOV #0xC310, W9
+    CP W4, W6			; Compara dato de tabla con el ascii A
+    BRA Z, Ciclo_Poema
+
+    MOV #71, W6	;ASCII 'G'
+    MOV #0xDF08, W9
+    CP W4, W6			; Compara dato de tabla con el ascii A
+    BRA Z, Ciclo_Poema
+
+    MOV #72, W6	;ASCII 'H'
+    MOV #0x3318, W9
+    CP W4, W6			; Compara dato de tabla con el ascii A
+    BRA Z, Ciclo_Poema
+
+    MOV #73, W6	;ASCII 'I'
+    MOV #0xCC42, W9
+    CP W4, W6			; Compara dato de tabla con el ascii A
+    BRA Z, Ciclo_Poema
+
+    MOV #74, W6	;ASCII 'J'
+    MOV #0x3E00, W9
+    CP W4, W6			; Compara dato de tabla con el ascii A
+    BRA Z, Ciclo_Poema
+
+    MOV #75, W6	;ASCII 'K'
+    MOV #0x0063, W9
+    CP W4, W6			; Compara dato de tabla con el ascii A
+    BRA Z, Ciclo_Poema
+
+    MOV #76, W6	;ASCII 'L'
+    MOV #0x0F00, W9
+    CP W4, W6			; Compara dato de tabla con el ascii A
+    BRA Z, Ciclo_Poema
+
+    MOV #77, W6	;ASCII 'M'
+    MOV #0x33A0, W9
+    CP W4, W6			; Compara dato de tabla con el ascii A
+    BRA Z, Ciclo_Poema
+
+    MOV #78, W6	;ASCII 'N'
+    MOV #0x3381, W9
+    CP W4, W6			; Compara dato de tabla con el ascii A
+    BRA Z, Ciclo_Poema
+
+    MOV #79, W6	;ASCII 'O'
+    MOV #0xFF00, W9
+    CP W4, W6			; Compara dato de tabla con el ascii A
+    BRA Z, Ciclo_Poema
+
+    MOV #80, W6	;ASCII 'P'
+    MOV #0xE318, W9
+    CP W4, W6			; Compara dato de tabla con el ascii A
+    BRA Z, Ciclo_Poema
+
+    MOV #81, W6	;ASCII 'Q'
+    MOV #0xFF01, W9
+    CP W4, W6			; Compara dato de tabla con el ascii A
+    BRA Z, Ciclo_Poema
+
+    MOV #82, W6	;ASCII 'R'
+    MOV #0xE319, W9
+    CP W4, W6			; Compara dato de tabla con el ascii A
+    BRA Z, Ciclo_Poema
+
+    MOV #83, W6	;ASCII 'S'
+    MOV #0xDD18, W9
+    CP W4, W6			; Compara dato de tabla con el ascii A
+    BRA Z, Ciclo_Poema
+
+    MOV #84, W6	;ASCII 'T'
+    MOV #0xC042, W9
+    CP W4, W6			; Compara dato de tabla con el ascii A
+    BRA Z, Ciclo_Poema
+
+    MOV #85, W6	;ASCII 'U'
+    MOV #0x3F00, W9
+    CP W4, W6			; Compara dato de tabla con el ascii A
+    BRA Z, Ciclo_Poema
+
+    MOV #86, W6	;ASCII 'V'
+    MOV #0x0324, W9
+    CP W4, W6			; Compara dato de tabla con el ascii A
+    BRA Z, Ciclo_Poema
+
+    MOV #87, W6	;ASCII 'W'
+    MOV #0x3305, W9
+    CP W4, W6			; Compara dato de tabla con el ascii A
+    BRA Z, Ciclo_Poema
+
+    MOV #88, W6	;ASCII 'X'
+    MOV #0x00A5, W9
+    CP W4, W6			; Compara dato de tabla con el ascii A
+    BRA Z, Ciclo_Poema
+
+    MOV #89, W6	;ASCII 'Y'
+    MOV #0x211A, W9
+    CP W4, W6			; Compara dato de tabla con el ascii A
+    BRA Z, Ciclo_Poema
+
+    MOV #90, W6	;ASCII 'Z'
+    MOV #0xCC24, W9
+    CP W4, W6			; Compara dato de tabla con el ascii A
+    BRA Z, Ciclo_Poema
+    
+    CALL Ciclo_Poema
+    
+    
     
     
 Retardo:    
@@ -200,4 +370,3 @@ _wreg_init:
 ;--------End of All Code Sections ---------------------------------------------
 
 .end
-
